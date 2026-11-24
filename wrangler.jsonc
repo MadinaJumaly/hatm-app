@@ -1,0 +1,54 @@
+{
+  // Cloudflare Worker config. Top level = local development.
+  // Each environment repeats `vars` and `d1_databases`, because Wrangler does not inherit them.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hatm-dev",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-10-15",
+  "assets": {
+    // /g/<token> and /org/... return index.html (the SPA router decides).
+    "not_found_handling": "single-page-application",
+    // Only these paths reach the Worker. Everything else is a static file.
+    "run_worker_first": ["/api/*", "/g/*/manifest.webmanifest"],
+  },
+  "observability": { "enabled": true },
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": { "ENVIRONMENT": "local" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hatm-local",
+      "database_id": "local-only",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "env": {
+    // https://hatm-staging.hatm.workers.dev
+    "staging": {
+      "name": "hatm-staging",
+      "vars": { "ENVIRONMENT": "staging" },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "hatm-staging",
+          "database_id": "381e61cb-6c23-410d-94fe-fe6c3640fbdd",
+          "migrations_dir": "migrations",
+        },
+      ],
+    },
+    // https://app.hatm.workers.dev — real users. Its own database and secrets (different PEPPER).
+    "production": {
+      "name": "app",
+      "vars": { "ENVIRONMENT": "production" },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "hatm-prod",
+          "database_id": "7e21ac3c-6a9d-432b-8e64-8b6f5d4b7db0",
+          "migrations_dir": "migrations",
+        },
+      ],
+    },
+  },
+}

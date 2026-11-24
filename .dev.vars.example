@@ -1,0 +1,10 @@
+# Copy this file to .dev.vars (it is gitignored) and fill in local-only values.
+# Never reuse staging or production values here.
+
+# Generate with: openssl rand -base64 32
+PEPPER=
+
+# Organizer login for local development (used from Iteration 2).
+ORGANIZER_USERNAME=
+# Generate with: npm run hash-password (added in Iteration 2)
+ORGANIZER_PASSWORD_HASH=
